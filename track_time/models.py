@@ -1,6 +1,9 @@
+from collections import defaultdict
 from django.db import models
 from django.db.models.fields.related import ForeignKey
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Activity(models.Model):
@@ -27,6 +30,34 @@ class Activity(models.Model):
 class ActedActivity(models.Model):
     finished = models.DateTimeField('date finished')
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+
+    def acted_today():
+        today = timezone.now()
+        today_activities = ActedActivity.objects.filter(
+            # finished__gte=(timezone.now() - timedelta(days=1)) # 24 hours
+            finished__year=today.year, finished__month=today.month, finished__day=today.day  # only today
+        ).order_by('-finished')
+
+        seconds_by_type = defaultdict(int)
+
+        for i, acted_activity in enumerate(today_activities):
+            is_earliest = (i == len(today_activities) - 1)
+
+            seconds_by_type[acted_activity.activity.activity_type] += \
+                0 if is_earliest \
+                else (acted_activity.finished - today_activities[i + 1].finished).seconds
+
+        total_seconds = sum(seconds_by_type.values())
+
+        percents_by_type = defaultdict(int)
+        for k, v in seconds_by_type.items():
+            percents_by_type[k] = round(v / total_seconds * 100)
+
+        today_activities.labels = str(list(percents_by_type.keys()))
+        today_activities.values = str(list(percents_by_type.values()))
+        today_activities.total_seconds = total_seconds
+
+        return today_activities
 
     class Meta:
         verbose_name_plural = "Acted Activities"
