@@ -1,3 +1,6 @@
+# Project Track
+temp/
+
 # Django #
 *.log
 *.pot
