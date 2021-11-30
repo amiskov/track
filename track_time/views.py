@@ -9,12 +9,17 @@ from .models import ActedActivity, Activity
 
 def index(request):
     activities = Activity.objects.order_by('activity_type')
+    today = timezone.now()
     acted_activities = ActedActivity.objects.filter(
-        finished__gte=(timezone.now() - timedelta(days=1))).order_by('-finished')
+        # finished__gte=(timezone.now() - timedelta(days=1)) # 24 hours
+        finished__year=today.year, finished__month=today.month, finished__day=today.day  # only today
+    ).order_by('-finished')
+
     context = {
         'activities': activities,
         'acted_activities': acted_activities,
     }
+
     return render(request, 'track_time/index.html', context)
 
 

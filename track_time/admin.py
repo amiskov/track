@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .models import Activity, ActedActivity
 
-# admin.site.register(Activity)
-
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
