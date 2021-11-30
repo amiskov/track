@@ -21,9 +21,15 @@ class Activity(models.Model):
     )
 
     def __str__(self):
-        return 'Activity: {}'.format(self.name)
+        return self.name
 
 
 class ActedActivity(models.Model):
     finished = models.DateTimeField('date finished')
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Acted Activities"
+
+    def __str__(self):
+        return self.activity.name

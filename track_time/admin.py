@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Activity
+from .models import Activity, ActedActivity
 
 # admin.site.register(Activity)
 
@@ -8,3 +8,9 @@ from .models import Activity
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('name', 'activity_type', 'id')
     list_filter = ('activity_type', )
+
+
+@admin.register(ActedActivity)
+class ActedActivityAdmin(admin.ModelAdmin):
+    list_display = ('activity', 'finished', 'id')
+    list_filter = ('finished', )
