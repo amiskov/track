@@ -7,4 +7,7 @@ urlpatterns = [
     path('<int:activity_id>/add/',
          views.add_acted_activity,
          name='add_acted_activity'),
+    path('<int:actedactivity_id>/remove/',
+         views.remove_acted_activity,
+         name='remove_acted_activity'),
 ]

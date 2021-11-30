@@ -15,7 +15,7 @@
         <div class="messages">
             {% for message in messages %}
                 {% autoescape off %}
-                    <div {% if message.tags %} class="alert alert-{{ message.tags }} " {% endif %}> {{ message }} </div>
+                    <div {% if message.tags %} class="alert alert-{{ message.tags }} " {% endif %}> {{ message }}</div>
                 {% endautoescape %}
             {% endfor %}
         </div>
@@ -40,21 +40,31 @@
         <p>No activities are available.</p>
     {% endif %}    
     <hr>
-    <ul class="list-group">
+    <table class="table">
+        <tbody>
         {% for a in acted_activities %}
-            <li class="list-group-item"><span
-                    {% if a.activity.activity_type == "good" %}
-                        class="badge bg-success"
-                    {% elif a.activity.activity_type == "bad" %}
-                        class="badge bg-danger"
-                    {% else %}
-                        class="badge bg-secondary"
-                    {% endif %} 
-                >{{ a.finished|date:"d.m, H:i" }}</span>
-                &nbsp;
-                {{a.activity.name}}</li>
+            <tr {% if a.activity.activity_type == "good" %}
+                    class="table-success"
+                {% elif a.activity.activity_type == "bad" %}
+                    class="table-danger"
+                {% else %}
+                    class="table-secondary"
+                {% endif %}>
+                <td class="align-middle">
+                    <span class="badge bg-light text-dark">{{ a.finished|date:"d.m, H:i" }}</span>
+                </td>
+                <td class="align-middle" width="100%">
+                    {{a.activity.name}}
+                </td>
+                <td class="align-middle">
+                <form style="display: inline-block;" action="{% url 'remove_acted_activity' a.id %}">
+                    <button class="btn btn-danger" type="submit">&times;</button>
+                </form>
+                </td>
+            </tr>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 </div>
 <footer>
     <p><br></p>

@@ -27,3 +27,12 @@ def add_acted_activity(request, activity_id):
     messages.success(
         request, f"<b>{activity.name}</b> was added successfully!")
     return redirect('index')
+
+
+def remove_acted_activity(request, actedactivity_id):
+    acted_activity = ActedActivity.objects.get(id=actedactivity_id)
+    activity_name = acted_activity.activity.name
+    acted_activity.delete()
+    messages.success(
+        request, f"<b>{activity_name}</b> was removed successfully!")
+    return redirect('index')
