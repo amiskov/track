@@ -1,0 +1,63 @@
+{% load l10n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'track_time/css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container" style="margin-top: 1rem">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {% autoescape off %}
+                    <div {% if message.tags %} class="alert alert-{{ message.tags }} " {% endif %}> {{ message }} </div>
+                {% endautoescape %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if activities %}
+        {% for a in activities %}
+            <form style="margin: 0 .5em .5em 0; display: inline-block;" action="{% url 'add_acted_activity' a.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit"
+                {% if a.activity_type == "good" %}
+                    class="btn-success btn"
+                {% elif a.activity_type == "bad" %}
+                    class="btn-danger btn"
+                {% else %}
+                    class="btn-secondary btn"
+                {% endif %} 
+                >{{ a.name }}</button>
+            </form>
+        {% endfor %}
+    {% else %}
+        <p>No activities are available.</p>
+    {% endif %}    
+    <hr>
+    <ul class="list-group">
+        {% for a in acted_activities %}
+            <li class="list-group-item"><span
+                    {% if a.activity.activity_type == "good" %}
+                        class="badge bg-success"
+                    {% elif a.activity.activity_type == "bad" %}
+                        class="badge bg-danger"
+                    {% else %}
+                        class="badge bg-secondary"
+                    {% endif %} 
+                >{{ a.finished|date:"d.m, H:i" }}</span>
+                &nbsp;
+                {{a.activity.name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+<footer>
+    <p><br></p>
+</footer>
+</body>
+</html>
