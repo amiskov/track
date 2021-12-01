@@ -42,28 +42,27 @@
     {% endif %}    
     <hr>
 
-    <div id="pieChart"></div>
-
-    <script>
-        var data = [{
-            type: "pie",
-            values: {{acted_activities.values}},
-            labels: {{acted_activities.labels|safe}},
-            marker: {
-                colors: [
-                  '#d1e7dd',
-                  '#f8d7da',
-                  '#e2e3e5'
-                ]
-              },
-            textinfo: "label+percent",
-            insidetextorientation: "radial"
-          }];
-          var layout = { height: 400, width: 400, showlegend: false };
-          Plotly.newPlot('pieChart', data, layout);
-    </script>
- 
-
+    {% if acted_activities|length > 1 %}
+        <div id="pieChart"></div>
+        <script>
+            var data = [{
+                type: "pie",
+                values: {{acted_activities.values}},
+                labels: {{acted_activities.labels|safe}},
+                marker: {
+                    colors: [
+                    '#d1e7dd',
+                    '#f8d7da',
+                    '#e2e3e5'
+                    ]
+                },
+                textinfo: "label+percent",
+                insidetextorientation: "radial"
+            }];
+            var layout = { height: 400, width: 400, showlegend: false };
+            Plotly.newPlot('pieChart', data, layout);
+        </script>
+    {% endif %}
 
     <table class="table">
         <tbody>
