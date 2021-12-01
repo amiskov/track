@@ -32,6 +32,14 @@ class ActedActivity(models.Model):
     finished = models.DateTimeField('date finished')
     activity = models.ForeignKey(Activity, on_delete=models.RESTRICT)
 
+    def add(activity_id):
+        activity = Activity.objects.get(id=activity_id)
+        acted_activity = ActedActivity(
+            finished=timezone.now(),
+            activity=activity)
+        acted_activity.save()
+        return acted_activity
+
     def acted_today():
         today = timezone.now()
         today_activities = ActedActivity.objects.filter(
