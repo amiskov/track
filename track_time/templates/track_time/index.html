@@ -78,7 +78,7 @@
                     <span class="badge text-dark">{{ a.finished|date:"H:i" }}</span>
                 </td>
                 <td class="align-middle" style="padding-left: 0" width="100%">
-                    {{a.activity.name}} <span class="badge rounded-pill bg-light text-dark">{{a.duration}}</span>
+                    {{a.activity.name}} <span class="badge rounded-pill border border-secondary text-secondary">{{a.duration}}</span>
                 </td>
                 <td class="align-middle">
                 <form style="display: inline-block;" action="{% url 'remove_acted_activity' a.id %}">
