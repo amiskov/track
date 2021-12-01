@@ -1,5 +1,6 @@
 # Project Track
 temp/
+.secret_key
 
 # Django #
 *.log
