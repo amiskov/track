@@ -4,6 +4,7 @@ from django.db.models.fields.related import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from datetime import timedelta
+from humanize import naturaldelta
 
 
 class Activity(models.Model):
@@ -40,12 +41,15 @@ class ActedActivity(models.Model):
 
         seconds_by_type = defaultdict(int)
 
-        for i, acted_activity in enumerate(today_activities):
+        for i, today_activity in enumerate(today_activities):
             is_earliest = (i == len(today_activities) - 1)
 
-            seconds_by_type[acted_activity.activity.activity_type] += \
-                0 if is_earliest \
-                else (acted_activity.finished - today_activities[i + 1].finished).seconds
+            duration = timedelta(seconds=0) if is_earliest \
+                else (today_activity.finished - today_activities[i + 1].finished)
+
+            seconds_by_type[today_activity.activity.activity_type] += duration.seconds
+
+            today_activity.duration = naturaldelta(duration)
 
         # must be non zero
         total_seconds = max(sum(seconds_by_type.values()), 1)
