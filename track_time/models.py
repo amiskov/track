@@ -43,8 +43,11 @@ class ActedActivity(models.Model):
     def acted_today():
         today = timezone.now()
         today_activities = ActedActivity.objects.filter(
-            # finished__gte=(timezone.now() - timedelta(days=1))  # 24 hours
-            finished__year=today.year, finished__month=today.month, finished__day=today.day  # only today
+            # 24 hours:
+            # finished__gte=(timezone.now() - timedelta(days=1))
+
+            # only today after 5 AM:
+            finished__year=today.year, finished__month=today.month, finished__day=today.day, finished__hour__gte=5
         ).order_by('-finished')
 
         seconds_by_type = defaultdict(int)
