@@ -21,7 +21,6 @@
             {% endfor %}
         </div>
     {% endif %}
-
     {% if activities %}
         {% for a in activities %}
             <form style="margin: 0 .5em .5em 0; display: inline-block;" action="{% url 'add_acted_activity' a.id %}" method="post">
@@ -41,6 +40,11 @@
         <p>No activities are available.</p>
     {% endif %}    
     <hr>
+    <ul class="list-inline">
+        {% for d, name in month_days %}
+            <li class="list-inline-item"><a href="?date={{d|date:"Y-m-d"}}">{{name}}</a></li>
+        {% endfor %}
+    </ul>
 
     {% if acted_activities|length > 1 %}
         <div id="pieChart"></div>

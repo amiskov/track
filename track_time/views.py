@@ -1,7 +1,9 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.utils import timezone
+from django.utils import timezone, dateparse
+import datetime
+import humanize
 
 
 from .models import ActedActivity, Activity
@@ -10,9 +12,20 @@ from .models import ActedActivity, Activity
 def index(request):
     activities = Activity.objects.order_by('activity_type')
 
+    date_param = request.GET.get('date')
+    date = dateparse.parse_date(date_param) if date_param else timezone.now()
+
+    today = datetime.datetime.today()
+
+    last_day = today.day + 1 if date.month == today.month else date.day + 1
+
+    month_days = [(dt := datetime.date(date.year, date.month, d), humanize.naturaldate(dt))
+                  for d in range(1, last_day)]
+
     context = {
         'activities': activities,
-        'acted_activities': ActedActivity.acted_today(),
+        'acted_activities': ActedActivity.get_acted_for_day(date),
+        'month_days': month_days
     }
 
     return render(request, 'track_time/index.html', context)

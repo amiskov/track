@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.fields.related import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 from humanize import naturaldelta
 
 
@@ -40,23 +40,18 @@ class ActedActivity(models.Model):
         acted_activity.save()
         return acted_activity
 
-    def acted_today():
-        today = timezone.now()
-        today_activities = ActedActivity.objects.filter(
-            # 24 hours:
-            # finished__gte=(timezone.now() - timedelta(days=1))
-
+    def get_acted_for_day(day: datetime):
+        acted = ActedActivity.objects.filter(
             # only today after 5 AM:
-            finished__year=today.year, finished__month=today.month, finished__day=today.day, finished__hour__gte=5
+            finished__year=day.year, finished__month=day.month, finished__day=day.day, finished__hour__gte=5
         ).order_by('-finished')
-
         seconds_by_type = defaultdict(int)
 
-        for i, today_activity in enumerate(today_activities):
-            is_earliest = (i == len(today_activities) - 1)
+        for i, today_activity in enumerate(acted):
+            is_earliest = (i == len(acted) - 1)
 
             duration = timedelta(seconds=0) if is_earliest \
-                else (today_activity.finished - today_activities[i + 1].finished)
+                else (today_activity.finished - acted[i + 1].finished)
 
             seconds_by_type[today_activity.activity.activity_type] += duration.seconds
 
@@ -69,11 +64,15 @@ class ActedActivity(models.Model):
         for k, v in seconds_by_type.items():
             percents_by_type[k] = round(v / total_seconds * 100)
 
-        today_activities.labels = str(list(percents_by_type.keys()))
-        today_activities.values = str(list(percents_by_type.values()))
-        today_activities.total_seconds = total_seconds
+        acted.labels = str(list(percents_by_type.keys()))
+        acted.values = str(list(percents_by_type.values()))
+        acted.total_seconds = total_seconds
+        return acted
 
-        return today_activities
+    @classmethod
+    def acted_today(self):
+        today = timezone.now()
+        return self.get_acted_for_day(today)
 
     class Meta:
         verbose_name_plural = "Acted Activities"
