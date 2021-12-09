@@ -4,7 +4,7 @@ from django.db.models.fields.related import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from datetime import timedelta, datetime
-from humanize import naturaldelta
+from humanize import precisedelta
 
 
 class Activity(models.Model):
@@ -55,7 +55,8 @@ class ActedActivity(models.Model):
 
             seconds_by_type[today_activity.activity.activity_type] += duration.seconds
 
-            today_activity.duration = naturaldelta(duration)
+            today_activity.duration = precisedelta(
+                duration, minimum_unit="minutes", format="%0.0f")
 
         # must be non zero
         total_seconds = max(sum(seconds_by_type.values()), 1)
