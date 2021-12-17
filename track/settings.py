@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     '192.168.1.96',
     '127.0.0.1',
     'localhost',
+    '0.0.0.0',
     'amiskov.pythonanywhere.com'
 ]
 
