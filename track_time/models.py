@@ -62,9 +62,11 @@ class ActedActivity(models.Model):
         total_seconds = max(sum(seconds_by_type.values()), 1)
 
         percents_by_type = defaultdict(int)
-        for k, v in seconds_by_type.items():
+        # Alphabetically sorted by labels
+        for k, v in sorted(seconds_by_type.items(), key=lambda e: e[0]):
             percents_by_type[k] = round(v / total_seconds * 100)
 
+        acted.all = str(dict(percents_by_type))
         acted.labels = str(list(percents_by_type.keys()))
         acted.values = str(list(percents_by_type.values()))
         acted.total_seconds = total_seconds
