@@ -80,23 +80,25 @@ class ActedActivity(models.Model):
         acted.values = str(list(percents_by_type.values()))
         acted.total_seconds = total_seconds
 
-        for k, v in duration_by_name.items():
-            duration_by_name[k] = precisedelta(v, minimum_unit="minutes", format="%0.0f")
+        # sort by duration
+        durs_sorted = list(duration_by_name.items())
+        durs_sorted.sort(key=lambda d: d[1].seconds, reverse=True)
 
+        # humanize and add activity type
         durs = []
-        for d in duration_by_name.items():
+        for d in durs_sorted:
             name, dur = d
-            t = (name, dur, names_with_types[name])
+            t = (name, precisedelta(dur, minimum_unit="minutes", format="%0.0f"), names_with_types[name])
             durs.append(t)
 
-        acted.totals = durs #duration_by_name.items()
+        acted.totals = durs
         acted.names_with_types = names_with_types
         return acted
 
     @classmethod
-    def acted_today(self):
+    def acted_today(cls):
         today = timezone.now()
-        return self.get_acted_for_day(today)
+        return cls.get_acted_for_day(today)
 
     class Meta:
         verbose_name_plural = "Acted Activities"
