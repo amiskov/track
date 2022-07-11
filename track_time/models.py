@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.fields.related import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, time
 from humanize import precisedelta
 
 
@@ -43,15 +43,24 @@ class ActedActivity(models.Model):
     def get_acted_for_day(day: datetime):
         acted = ActedActivity.objects.filter(
             # only today after 5 AM:
-            finished__year=day.year, finished__month=day.month, finished__day=day.day, finished__hour__gte=5
+            finished__year=day.year,
+            finished__month=day.month,
+            finished__day=day.day,
+            finished__hour__gte=5,
         ).order_by('-finished')
         seconds_by_type = defaultdict(int)
+
+        duration_by_name = defaultdict(timedelta)
+        names_with_types = defaultdict(str)
 
         for i, today_activity in enumerate(acted):
             is_earliest = (i == len(acted) - 1)
 
             duration = timedelta(seconds=0) if is_earliest \
                 else (today_activity.finished - acted[i + 1].finished)
+
+            duration_by_name[today_activity.activity.name] += duration
+            names_with_types[today_activity.activity.name] = today_activity.activity.activity_type
 
             seconds_by_type[today_activity.activity.activity_type] += duration.seconds
 
@@ -70,6 +79,18 @@ class ActedActivity(models.Model):
         acted.labels = str(list(percents_by_type.keys()))
         acted.values = str(list(percents_by_type.values()))
         acted.total_seconds = total_seconds
+
+        for k, v in duration_by_name.items():
+            duration_by_name[k] = precisedelta(v, minimum_unit="minutes", format="%0.0f")
+
+        durs = []
+        for d in duration_by_name.items():
+            name, dur = d
+            t = (name, dur, names_with_types[name])
+            durs.append(t)
+
+        acted.totals = durs #duration_by_name.items()
+        acted.names_with_types = names_with_types
         return acted
 
     @classmethod
