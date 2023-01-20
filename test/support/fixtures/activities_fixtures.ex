@@ -11,7 +11,8 @@ defmodule Track.ActivitiesFixtures do
     {:ok, activity} =
       attrs
       |> Enum.into(%{
-        title: "some title"
+        title: "Some Necessary Activity",
+        activity_type: "necessary"
       })
       |> Track.Activities.create_activity()
 

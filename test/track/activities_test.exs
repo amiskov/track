@@ -20,15 +20,21 @@ defmodule Track.ActivitiesTest do
       assert Activities.get_activity!(activity.id) == activity
     end
 
-    test "create_activity/1 with valid data creates a activity" do
-      valid_attrs = %{title: "some title"}
+    test "create_activity/1 with valid data creates an activity" do
+      valid_attrs = %{title: "some good activity", activity_type: "good"}
 
       assert {:ok, %Activity{} = activity} = Activities.create_activity(valid_attrs)
-      assert activity.title == "some title"
+      assert activity.title == "some good activity"
     end
 
     test "create_activity/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Activities.create_activity(@invalid_attrs)
+    end
+
+    test "create_activity/1 with non-unique title returns error changeset" do
+      activity = activity_fixture()
+      {:error, changeset} = Activities.create_activity(%{title: activity.title})
+      refute changeset.valid?
     end
 
     test "update_activity/2 with valid data updates the activity" do
