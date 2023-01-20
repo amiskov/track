@@ -19,12 +19,21 @@ defmodule TrackWeb.Router do
 
     get "/", PageController, :index
 
+    # Activities
     live "/activities", ActivityLive.Index, :index
     live "/activities/new", ActivityLive.Index, :new
     live "/activities/:id/edit", ActivityLive.Index, :edit
 
     live "/activities/:id", ActivityLive.Show, :show
     live "/activities/:id/show/edit", ActivityLive.Show, :edit
+
+    # Acted Activities
+    live "/acted", ActedActivityLive.Index, :index
+    live "/acted/new", ActedActivityLive.Index, :new
+    live "/acted/:id/edit", ActedActivityLive.Index, :edit
+
+    live "/acted/:id", ActedActivityLive.Show, :show
+    live "/acted/:id/show/edit", ActedActivityLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

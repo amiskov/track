@@ -18,4 +18,19 @@ defmodule Track.ActivitiesFixtures do
 
     activity
   end
+
+  @doc """
+  Generate a acted_activity.
+  """
+  def acted_activity_fixture(attrs \\ %{}) do
+    {:ok, acted_activity} =
+      attrs
+      |> Enum.into(%{
+        begin_timestamp: ~N[2023-01-19 12:23:00],
+        end_timestamp: ~N[2023-01-19 12:23:00]
+      })
+      |> Track.Activities.create_acted_activity()
+
+    acted_activity
+  end
 end

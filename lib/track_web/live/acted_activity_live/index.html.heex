@@ -1,0 +1,50 @@
+<h2>Listing Acted activities</h2>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.acted_activity_index_path(@socket, :index)}>
+    <.live_component
+      module={TrackWeb.ActedActivityLive.FormComponent}
+      id={@acted_activity.id || :new}
+      title={@page_title}
+      action={@live_action}
+      acted_activity={@acted_activity}
+      activities_list={@activities_list}
+      return_to={Routes.acted_activity_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<div class="activities-buttons">
+<%= for {title, id} <- @activities_list do %>
+  <button><%= title %></button>
+<% end %>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Activity</th>
+      <th>Begin timestamp</th>
+      <th>End timestamp</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="acted_activities">
+    <%= for acted_activity <- @acted_activities do %>
+      <tr id={"acted_activity-#{acted_activity.id}"}>
+        <td><%= acted_activity.activity_title %></td>
+        <td><%= acted_activity.begin_timestamp %></td>
+        <td><%= acted_activity.end_timestamp %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.acted_activity_show_path(@socket, :show, acted_activity) %></span>
+          <span><%= live_patch "Edit", to: Routes.acted_activity_index_path(@socket, :edit, acted_activity) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: acted_activity.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Acted activity", to: Routes.acted_activity_index_path(@socket, :new) %></span>

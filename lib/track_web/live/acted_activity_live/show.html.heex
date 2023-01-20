@@ -1,0 +1,32 @@
+<h1>Show Acted activity</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.acted_activity_show_path(@socket, :show, @acted_activity)}>
+    <.live_component
+      module={TrackWeb.ActedActivityLive.FormComponent}
+      id={@acted_activity.id}
+      title={@page_title}
+      action={@live_action}
+      acted_activity={@acted_activity}
+      activities_list={@activities_list}
+      return_to={Routes.acted_activity_show_path(@socket, :show, @acted_activity)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Begin timestamp:</strong>
+    <%= @acted_activity.begin_timestamp %>
+  </li>
+
+  <li>
+    <strong>End timestamp:</strong>
+    <%= @acted_activity.end_timestamp %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.acted_activity_show_path(@socket, :edit, @acted_activity), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.acted_activity_index_path(@socket, :index) %></span>

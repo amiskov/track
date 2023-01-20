@@ -101,4 +101,106 @@ defmodule Track.Activities do
   def change_activity(%Activity{} = activity, attrs \\ %{}) do
     Activity.changeset(activity, attrs)
   end
+
+  alias Track.Activities.ActedActivity
+
+  @doc """
+  Returns the list of acted_activities.
+
+  ## Examples
+
+      iex> list_acted_activities()
+      [%ActedActivity{}, ...]
+
+  """
+  def list_acted_activities do
+    query =
+      from aa in ActedActivity,
+        join: a in Activity,
+        on: aa.activity_id == a.id,
+        select_merge: %{activity_title: a.title}
+
+    Repo.all(query)
+  end
+
+  @doc """
+  Gets a single acted_activity.
+
+  Raises `Ecto.NoResultsError` if the Acted activity does not exist.
+
+  ## Examples
+
+      iex> get_acted_activity!(123)
+      %ActedActivity{}
+
+      iex> get_acted_activity!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_acted_activity!(id), do: Repo.get!(ActedActivity, id)
+
+  @doc """
+  Creates a acted_activity.
+
+  ## Examples
+
+      iex> create_acted_activity(%{field: value})
+      {:ok, %ActedActivity{}}
+
+      iex> create_acted_activity(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_acted_activity(attrs \\ %{}) do
+    %ActedActivity{}
+    |> ActedActivity.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a acted_activity.
+
+  ## Examples
+
+      iex> update_acted_activity(acted_activity, %{field: new_value})
+      {:ok, %ActedActivity{}}
+
+      iex> update_acted_activity(acted_activity, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_acted_activity(%ActedActivity{} = acted_activity, attrs) do
+    acted_activity
+    |> ActedActivity.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a acted_activity.
+
+  ## Examples
+
+      iex> delete_acted_activity(acted_activity)
+      {:ok, %ActedActivity{}}
+
+      iex> delete_acted_activity(acted_activity)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_acted_activity(%ActedActivity{} = acted_activity) do
+    Repo.delete(acted_activity)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking acted_activity changes.
+
+  ## Examples
+
+      iex> change_acted_activity(acted_activity)
+      %Ecto.Changeset{data: %ActedActivity{}}
+
+  """
+  def change_acted_activity(%ActedActivity{} = acted_activity, attrs \\ %{}) do
+    ActedActivity.changeset(acted_activity, attrs)
+  end
 end
