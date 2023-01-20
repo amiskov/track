@@ -118,7 +118,8 @@ defmodule Track.Activities do
       from aa in ActedActivity,
         join: a in Activity,
         on: aa.activity_id == a.id,
-        select_merge: %{activity_title: a.title}
+        select_merge: %{activity_title: a.title},
+        order_by: [desc: aa.end_timestamp]
 
     Repo.all(query)
   end
@@ -202,5 +203,14 @@ defmodule Track.Activities do
   """
   def change_acted_activity(%ActedActivity{} = acted_activity, attrs \\ %{}) do
     ActedActivity.changeset(acted_activity, attrs)
+  end
+
+  def get_last_acted_activity_end_timestamp!() do
+    Repo.one(
+      from a in ActedActivity,
+        order_by: [desc: a.end_timestamp],
+        limit: 1,
+        select: a.end_timestamp
+    )
   end
 end

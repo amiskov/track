@@ -4,8 +4,23 @@ defmodule TrackWeb.ActedActivityLive.FormComponent do
   alias Track.Activities
 
   @impl true
-  def update(%{acted_activity: acted_activity} = assigns, socket) do
+  def update(%{acted_activity: acted_activity, new_acted_activity_params: nil} = assigns, socket) do
     changeset = Activities.change_acted_activity(acted_activity)
+
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign(:changeset, changeset)}
+  end
+
+  @impl true
+  def update(
+        %{acted_activity: acted_activity, new_acted_activity_params: params} = assigns,
+        socket
+      ) do
+    changeset =
+      acted_activity
+      |> Activities.change_acted_activity(params)
 
     {:ok,
      socket

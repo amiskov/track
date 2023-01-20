@@ -18,14 +18,21 @@ defmodule TrackWeb.ActedActivityLive.Index do
     socket
     |> assign(:page_title, "Edit Acted activity")
     |> assign(:acted_activity, Activities.get_acted_activity!(id))
+    |> assign(:new_acted_activity_params, nil)
     |> assign_activities_list()
   end
 
-  defp apply_action(socket, :new, _params) do
+  defp apply_action(socket, :new, params) do
+    params =
+      params
+      |> Map.put("begin_timestamp", get_latest_timestamp())
+      |> Map.put("end_timestamp", NaiveDateTime.utc_now())
+
     socket
     |> assign(:page_title, "New Acted activity")
     |> assign_activities_list()
     |> assign(:acted_activity, %ActedActivity{})
+    |> assign(:new_acted_activity_params, params)
   end
 
   defp apply_action(socket, :index, _params) do
@@ -51,5 +58,12 @@ defmodule TrackWeb.ActedActivityLive.Index do
     activities_list = Activities.list_activities() |> Enum.map(fn a -> {a.title, a.id} end)
 
     assign(socket, :activities_list, activities_list)
+  end
+
+  defp get_latest_timestamp do
+    case Activities.get_last_acted_activity_end_timestamp!() do
+      nil -> NaiveDateTime.utc_now()
+      end_timestamp -> end_timestamp
+    end
   end
 end

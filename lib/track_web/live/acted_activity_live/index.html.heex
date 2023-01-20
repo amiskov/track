@@ -1,5 +1,4 @@
 <h2>Listing Acted activities</h2>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.acted_activity_index_path(@socket, :index)}>
     <.live_component
@@ -8,6 +7,7 @@
       title={@page_title}
       action={@live_action}
       acted_activity={@acted_activity}
+      new_acted_activity_params={@new_acted_activity_params}
       activities_list={@activities_list}
       return_to={Routes.acted_activity_index_path(@socket, :index)}
     />
@@ -16,7 +16,9 @@
 
 <div class="activities-buttons">
 <%= for {title, id} <- @activities_list do %>
-  <button><%= title %></button>
+  <%= live_patch title,
+  to: Routes.acted_activity_index_path(@socket, :new, %{activity_id: id }),
+  class: "button" %>
 <% end %>
 </div>
 
