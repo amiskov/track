@@ -52,10 +52,31 @@ defmodule TrackWeb.ActedActivityLive.Index do
 
   defp list_acted_activities do
     Activities.list_acted_activities()
+    |> Enum.map(fn a ->
+      duration =
+        NaiveDateTime.diff(a.end_timestamp, a.begin_timestamp)
+        |> Timex.Duration.from_seconds()
+        |> Timex.Format.Duration.Formatters.Humanized.format()
+
+      end_time = NaiveDateTime.to_time(a.end_timestamp)
+      begin_time = NaiveDateTime.to_time(a.begin_timestamp)
+
+      a
+      |> Map.put(:duration, duration)
+      |> Map.put(:time_span, "#{begin_time}—#{end_time}")
+    end)
   end
 
   defp assign_activities_list(socket) do
-    activities_list = Activities.list_activities() |> Enum.map(fn a -> {a.title, a.id} end)
+    activities_list =
+      Activities.list_activities()
+      |> Enum.map(fn a ->
+        %{
+          title: a.title,
+          id: a.id,
+          type: a.activity_type
+        }
+      end)
 
     assign(socket, :activities_list, activities_list)
   end

@@ -1,6 +1,24 @@
 /* This file is for your main application CSS */
 @import "./phoenix.css";
 
+/* Buttons */
+.button {
+  padding: 0 1em;
+  height: auto;
+  font-weight: normal;
+  font-size: inherit;
+  text-transform: none;
+}
+.button.bad {
+  background-color: #dc3545;
+}
+.button.good {
+  background-color: #198754;
+}
+.button.necessary {
+  background-color: #6c757d;
+}
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

@@ -15,10 +15,10 @@
 <% end %>
 
 <div class="activities-buttons">
-<%= for {title, id} <- @activities_list do %>
-  <%= live_patch title,
-  to: Routes.acted_activity_index_path(@socket, :new, %{activity_id: id }),
-  class: "button" %>
+<%= for a <- @activities_list do %>
+  <%= live_patch a.title,
+  to: Routes.acted_activity_index_path(@socket, :new, %{activity_id: a.id }),
+  class: ["button", a.type] %>
 <% end %>
 </div>
 
@@ -26,23 +26,20 @@
   <thead>
     <tr>
       <th>Activity</th>
-      <th>Begin timestamp</th>
-      <th>End timestamp</th>
-
+      <th>Duration</th>
+      <th>Time Span</th>
       <th></th>
     </tr>
   </thead>
   <tbody id="acted_activities">
-    <%= for acted_activity <- @acted_activities do %>
-      <tr id={"acted_activity-#{acted_activity.id}"}>
-        <td><%= acted_activity.activity_title %></td>
-        <td><%= acted_activity.begin_timestamp %></td>
-        <td><%= acted_activity.end_timestamp %></td>
-
+    <%= for aa <- @acted_activities do %>
+      <tr id={"aa-#{aa.id}"}>
+        <td><%= aa.activity_title %></td>
+        <td><%= aa.duration %></td>
+        <td><%= aa.time_span %></td>
         <td>
-          <span><%= live_redirect "Show", to: Routes.acted_activity_show_path(@socket, :show, acted_activity) %></span>
-          <span><%= live_patch "Edit", to: Routes.acted_activity_index_path(@socket, :edit, acted_activity) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: acted_activity.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_patch "Edit", to: Routes.acted_activity_index_path(@socket, :edit, aa) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: aa.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>

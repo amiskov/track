@@ -18,7 +18,7 @@
     <%= error_tag f, :end_timestamp %>
 
     <%= label f, :activity_id %>
-    <%= select f, :activity_id, @activities_list %>
+    <%= select f, :activity_id, @activities_list |> Enum.map(fn a -> {a.title, a.id} end) %>
     <%= error_tag f, :activity_id %>
   
     <div>

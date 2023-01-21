@@ -17,8 +17,6 @@ defmodule TrackWeb.Router do
   scope "/", TrackWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-
     # Activities
     live "/activities", ActivityLive.Index, :index
     live "/activities/new", ActivityLive.Index, :new
@@ -28,7 +26,7 @@ defmodule TrackWeb.Router do
     live "/activities/:id/show/edit", ActivityLive.Show, :edit
 
     # Acted Activities
-    live "/acted", ActedActivityLive.Index, :index
+    live "/", ActedActivityLive.Index, :index
     live "/acted/new", ActedActivityLive.Index, :new
     live "/acted/:id/edit", ActedActivityLive.Index, :edit
 
