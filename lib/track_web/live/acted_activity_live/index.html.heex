@@ -14,23 +14,18 @@
 <% end %>
 
 <div class="activities-buttons">
-<%= for a <- @activities_list do %>
-  <%= live_patch a.title,
-  to: Routes.acted_activity_index_path(@socket, :new, %{activity_id: a.id }),
-  class: ["button", a.type] %>
-<% end %>
+  <%= for a <- @activities_list do %>
+      <%= link a.title,
+       to: "#",
+       phx_click: "save",
+       class: ["button", a.type],
+       phx_value_acted_activity_id: a.id
+      %>
+  <% end %>
 </div>
 
 <table>
-<!--   <thead>
-    <tr>
-      <th>Activity</th>
-      <th>Duration</th>
-      <th>Time Span</th>
-      <th></th>
-    </tr>
-  </thead>
- -->  <tbody id="acted_activities">
+  <tbody id="acted_activities">
     <%= for aa <- @acted_activities do %>
       <tr id={"aa-#{aa.id}"}>
         <td><%= aa.activity_title %></td>

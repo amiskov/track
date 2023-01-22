@@ -50,6 +50,24 @@ defmodule TrackWeb.ActedActivityLive.Index do
     {:noreply, assign(socket, :acted_activities, list_acted_activities())}
   end
 
+  @doc "Immediately save new acted activity (on button click)."
+  @impl true
+  def handle_event("save", %{"acted-activity-id" => id}, socket) do
+    params = %{
+      activity_id: id,
+      begin_timestamp: get_latest_timestamp(),
+      end_timestamp: NaiveDateTime.utc_now()
+    }
+
+    case Activities.create_acted_activity(params) do
+      {:ok, _acted_activity} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Acted activity created successfully")
+         |> push_redirect(to: "/")}
+    end
+  end
+
   defp list_acted_activities do
     Activities.list_acted_activities()
     |> Enum.map(fn a ->
