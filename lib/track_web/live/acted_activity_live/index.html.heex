@@ -1,4 +1,3 @@
-<h2>Listing Acted activities</h2>
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.acted_activity_index_path(@socket, :index)}>
     <.live_component
@@ -23,7 +22,7 @@
 </div>
 
 <table>
-  <thead>
+<!--   <thead>
     <tr>
       <th>Activity</th>
       <th>Duration</th>
@@ -31,7 +30,7 @@
       <th></th>
     </tr>
   </thead>
-  <tbody id="acted_activities">
+ -->  <tbody id="acted_activities">
     <%= for aa <- @acted_activities do %>
       <tr id={"aa-#{aa.id}"}>
         <td><%= aa.activity_title %></td>

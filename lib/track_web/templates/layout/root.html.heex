@@ -15,7 +15,10 @@
         <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
           <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %>
         <% end %>
-        <h1>Track</h1>
+        <div>
+          <h1 style="margin-bottom: 0;">Less Stupidly Spent</h1>
+          <p style="margin: 0 0 .5em;">Track the time and money you're spending.</p>
+        </div>
       </section>
     </header>
     <%= @inner_content %>
