@@ -4,6 +4,7 @@ defmodule Track.Activities do
   """
 
   import Ecto.Query, warn: false
+  alias Timex.NaiveDateTime
   alias Track.Repo
 
   alias Track.Activities.Activity
@@ -122,6 +123,22 @@ defmodule Track.Activities do
         order_by: [desc: aa.end_timestamp]
 
     Repo.all(query)
+  end
+
+  @doc "`date` is NaiveDateTime, without timezone"
+  def list_acted_activities_for_date(date) do
+    day_begin = Timex.beginning_of_day(date)
+    day_end = Timex.end_of_day(date)
+
+    q =
+      from aa in ActedActivity,
+        join: a in Activity,
+        on: aa.activity_id == a.id,
+        select_merge: %{activity_title: a.title},
+        where: aa.begin_timestamp >= ^day_begin and aa.end_timestamp <= ^day_end,
+        order_by: [desc: aa.end_timestamp]
+
+    Repo.all(q)
   end
 
   @doc """

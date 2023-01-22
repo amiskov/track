@@ -8,7 +8,8 @@
 import Config
 
 config :track,
-  ecto_repos: [Track.Repo]
+  ecto_repos: [Track.Repo],
+  default_timezone: "Europe/Moscow"
 
 # Configures the endpoint
 config :track, TrackWeb.Endpoint,
