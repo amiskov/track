@@ -34,6 +34,8 @@ activities = [
 ]
 
 Enum.each(activities, fn a ->
-  IO.inspect(a)
-  {:ok, _} = Activities.create_activity(a)
+  case Activities.create_activity(a) do
+    {:ok, _} -> IO.inspect("Created #{a.title}.")
+    {:error, _} -> IO.inspect("#{a.title} already exists.")
+  end
 end)
