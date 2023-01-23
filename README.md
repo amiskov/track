@@ -1,5 +1,11 @@
 # Track
 
+## Build for Production
+Create an `.env` file based on `.env.example`. 
+
+Run `docker compose up -d --build`.
+
+## Development
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`

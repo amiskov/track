@@ -4,7 +4,6 @@ defmodule Track.Activities do
   """
 
   import Ecto.Query, warn: false
-  alias Timex.NaiveDateTime
   alias Track.Repo
 
   alias Track.Activities.Activity
