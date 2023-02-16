@@ -69,24 +69,22 @@ defmodule TrackWeb.ActedActivityLive.Index do
   end
 
   defp list_acted_activities do
-    today = DateTime.utc_now()
     tz = Application.get_env(:track, :default_timezone)
+    now = Timex.now(tz)
 
-    Activities.list_acted_activities_for_date(today)
+    Activities.list_acted_activities_for_date(now)
     |> Enum.map(fn a ->
       duration =
-        NaiveDateTime.diff(a.end_timestamp, a.begin_timestamp)
+        Timex.diff(a.end_timestamp, a.begin_timestamp, :second)
         |> Timex.Duration.from_seconds()
         |> Timex.Format.Duration.Formatters.Humanized.format()
 
-      # TODO: change this to PostgreSQL TIMESTAMPTZ
-      {:ok, end_time} = DateTime.from_naive(a.end_timestamp, "UTC")
-      {:ok, end_time} = DateTime.shift_zone(end_time, tz)
+      # TODO: Do everything with Timex.
+
+      {:ok, end_time} = DateTime.shift_zone(a.end_timestamp, tz)
       end_time = DateTime.to_time(end_time)
 
-      # TODO: change this to PostgreSQL TIMESTAMPTZ
-      {:ok, begin_time} = DateTime.from_naive(a.begin_timestamp, "UTC")
-      {:ok, begin_time} = DateTime.shift_zone(begin_time, tz)
+      {:ok, begin_time} = DateTime.shift_zone(a.begin_timestamp, tz)
       begin_time = DateTime.to_time(begin_time)
 
       a

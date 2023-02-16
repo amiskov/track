@@ -4,8 +4,8 @@ defmodule Track.Activities.ActedActivity do
 
   schema "acted_activities" do
     field :activity_id, :id
-    field :begin_timestamp, :naive_datetime
-    field :end_timestamp, :naive_datetime
+    field :begin_timestamp, :utc_datetime
+    field :end_timestamp, :utc_datetime
     field :activity_title, :string, virtual: true
 
     timestamps()

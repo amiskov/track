@@ -124,7 +124,6 @@ defmodule Track.Activities do
     Repo.all(query)
   end
 
-  @doc "`date` is NaiveDateTime, without timezone"
   def list_acted_activities_for_date(date) do
     day_begin = Timex.beginning_of_day(date)
     day_end = Timex.end_of_day(date)
