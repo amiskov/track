@@ -29,8 +29,8 @@
     <%= for aa <- @acted_activities do %>
       <tr id={"aa-#{aa.id}"}>
         <td><%= aa.activity_title %></td>
-        <td><%= aa.duration %></td>
-        <td><%= aa.time_span %></td>
+        <td><%= aa.duration %><br>
+        <small><%= aa.time_span %></small></td>
         <td>
           <span><%= live_patch "Edit", to: Routes.acted_activity_index_path(@socket, :edit, aa) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: aa.id, data: [confirm: "Are you sure?"] %></span>
